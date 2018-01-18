@@ -24,7 +24,7 @@ struct EventData_##eventName { \
 class EventSubscriber_##eventName \
 {\
 public: \
-  virtual void Received_##eventName(const EventData_##eventName& eventName) {}\
+  virtual void Received_##eventName(const EventData_##eventName& eventName) = 0; \
 };
 
 EVENT_MESSAGE_PARAM_DATA
