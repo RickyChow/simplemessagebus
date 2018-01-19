@@ -36,7 +36,7 @@ class EventSubscriber
   : public EventSubscriberGeneric
 {
 public:
-  virtual void ReceivedEvent(const eventdata_t& event) = 0;
+  virtual void ReceivedEvent(eventdata_t& event) = 0;
 };
 
 

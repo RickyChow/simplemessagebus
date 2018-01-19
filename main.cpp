@@ -24,7 +24,7 @@ public:
     g_messageBus.Subscribe(this);
   }
 
-  void ReceivedEvent(const TestEventData& data)
+  void ReceivedEvent(TestEventData& data)
   {
     printf("Received event!\n\r");
   }
