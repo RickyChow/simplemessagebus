@@ -29,8 +29,7 @@ private:
   template<typename data_t>
   static std::string GetEventId()
   {
-    std::string eventId = typeid(data_t).name();
-    return eventId;
+    return typeid(data_t).name();
   }
   typedef std::set<EventSubscriberGeneric*> subscribercol_t;
   std::map<std::string, subscribercol_t> m_subscribers;
