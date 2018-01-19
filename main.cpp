@@ -15,7 +15,7 @@ public:
 
 
 class TestEventSubscriber
-  : public TestEventData::Subscriber
+  : public EventSubscriber<TestEventData>
 {
 public:
   TestEventSubscriber()
@@ -40,7 +40,7 @@ public:
 };
 
 class BaconSubscriber
-  : public BaconData::Subscriber
+  : public EventSubscriber<BaconData>
 {
 public:
   BaconSubscriber()
@@ -69,8 +69,6 @@ int main()
   bacon.baconName = "porky";
   bacon.crispiness = 23;
   bacon.baconIds.insert(123);
-
-  printf("main: bacon's eventId is %s\r\n", typeid(BaconData::Subscriber).name());
 
   g_messageBus.Publish(testEventData);
   g_messageBus.Publish(bacon);

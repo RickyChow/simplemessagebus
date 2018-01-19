@@ -13,13 +13,6 @@ class EventData
 {
 public:
   virtual ~EventData() {}
-  typedef EventSubscriber<super_t> Subscriber;
-
-  std::string GetEventId() const {
-    return typeid(Subscriber).name();
-  }
-private:
-  friend class EventMessageBus;
 };
 
 
@@ -31,8 +24,7 @@ private:
   template<typename data_t>
   void ReceivedEventInner(EventData<data_t>& data)
   {
-    typename EventData<data_t>::Subscriber* subTyped =
-        dynamic_cast<typename EventData<data_t>::Subscriber*>(this);
+    EventSubscriber<data_t>* subTyped = dynamic_cast<EventSubscriber<data_t>* >(this);
     data_t* dataTyped = dynamic_cast<data_t*>(&data);
     if (!dataTyped || !subTyped) return;
     subTyped->ReceivedEvent(*dataTyped);
@@ -65,18 +57,14 @@ public:
   template<typename data_t>
   void Publish(EventData<data_t>& data)
   {
-    printf("Publish data_t is  %s\r\n", data.GetEventId().c_str());
-    EventSubscriberGeneric* sub = 
-      m_subscribers[GetEventId<typename data_t::Subscriber>()];
+    EventSubscriberGeneric* sub = m_subscribers[GetEventId<data_t>()];
     sub->ReceivedEventInner(data);
   }
 
-  template<typename sub_t>
-  void Subscribe(sub_t* subscriber)
+  template<typename data_t>
+  void Subscribe(EventSubscriber<data_t>* subscriber)
   {
-    printf("EventMessageBus::Subscribe BEFORE m_subscribes.size: %ld\r\n", m_subscribers.size());
-    m_subscribers[GetEventId<sub_t>()] = subscriber; 
-    printf("EventMessageBus::Subscribe AFTER m_subscribes.size: %ld\r\n", m_subscribers.size());
+    m_subscribers[GetEventId<data_t>()] = subscriber; 
   }
 
 private:
