@@ -1,43 +1,45 @@
 #include <stdio.h>
 
-#include "messagebus.h"
+#include "messagebus2.h"
 
-using namespace tsd;
 
-MessageBus g_messageBus;
+EventMessageBus g_messageBus;
 
-class TestSubscriber
-  : public EventSubscriber_SignStatus
+
+class TestEventData
+  : public EventData<TestEventData>
 {
 public:
-  TestSubscriber()
+  int test;
+  int test2;
+};
+
+
+class TestEventSubscriber
+  : public TestEventData::Subscriber
+{
+public:
+  TestEventSubscriber()
   {
-    g_messageBus.Subscribe(static_cast<EventSubscriber_SignStatus*>(this));
+    g_messageBus.Subscribe(this);
   }
 
-  ~TestSubscriber()
+  void ReceivedEvent(const TestEventData& data)
   {
-    g_messageBus.Unsubscribe(static_cast<EventSubscriber_SignStatus*>(this));
-  }
-  
-  void Received_SignStatus(const EventData_SignStatus& data)
-  {
-    printf("received message data: %s\r\n", data.signName.c_str());
+    printf("Received event!\n\r");
   }
 };
 
 
+
 int main()
 {
-  TestSubscriber testSubscriber;
+  TestEventSubscriber testSubscriber;
 
-  EventData_TestEvent testEventData;
-  testEventData.test = "hello this is test data";
-
-  EventData_SignStatus signStatus;
-  signStatus.signName = "this is my sign name";
+  TestEventData testEventData;
+  testEventData.test = 100;
+  testEventData.test2 = 200;
 
   g_messageBus.Publish(testEventData);
-  g_messageBus.Publish(signStatus);
   return 0;
 }

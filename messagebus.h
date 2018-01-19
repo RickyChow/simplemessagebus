@@ -60,6 +60,19 @@ EVENT_MESSAGE_PARAM_DATA
 #undef EVENT_MESSAGE_PARAM_ROW_EXPANDER
 };
 
+class MessageBusServerConnection
+{
+public:
+class EventHandler
+{
+  virtual void ConnectionEstablished() = 0;
+};
+  virtual void Open() = 0;
+  virtual void Close() = 0;
+  
+};
+
+
 }
 
 #endif //_MESSAGEBUS_H_
