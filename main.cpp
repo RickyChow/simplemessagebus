@@ -5,72 +5,55 @@
 
 EventMessageBus g_messageBus;
 
-class TestEventData
-  : public EventData
+struct SignalData
 {
-public:
-  int test;
-  int test2;
+  int id;
+  std::string data;
 };
 
 
-class TestEventSubscriber
-  : public EventSubscriber<TestEventData>
+class SignalDataConsumer
+  : public EventSubscriber<SignalData>
 {
 public:
-  TestEventSubscriber()
+  SignalDataConsumer(int id)
+    : m_id(id)
   {
     g_messageBus.Subscribe(this);
   }
 
-  void ReceivedEvent(TestEventData& data)
+  void ReceivedEvent(SignalData& signalData)
   {
-    printf("Received event!\r\n");
+    if (signalData.id == m_id) {
+      printf("Received event data: %s!\r\n", signalData.data.c_str());
+    }
   }
+
+private:
+  int m_id;
 };
 
-
-class BaconData
-  : public EventData
+class EmptyClass
 {
-public:
-  std::string baconName;
-  int crispiness;
-  std::set<int> baconIds;
-};
-
-class BaconSubscriber
-  : public EventSubscriber<BaconData>
-{
-public:
-  BaconSubscriber()
-  {
-    g_messageBus.Subscribe(this);
-  }
-
-  void ReceivedEvent(BaconData& data)
-  {
-    printf("Received bacon event! name: %s, crispiness: %d \r\n",
-        data.baconName.c_str(),
-        data.crispiness);
-  }
+  
 };
 
 int main()
 {
-  TestEventSubscriber testSubscriber;
-  BaconSubscriber baconSubsubscriber;
+  SignalDataConsumer dataConsumer(1);
 
-  TestEventData testEventData;
-  testEventData.test = 100;
-  testEventData.test2 = 200;
+  SignalData signalData1;
+  signalData1.id = 1;
+  signalData1.data = "Data for signal 1";
+  
+  SignalData signalData2;
+  signalData2.id = 2;
+  signalData2.data = "Data for signal 2";
 
-  BaconData bacon;
-  bacon.baconName = "porky";
-  bacon.crispiness = 23;
-  bacon.baconIds.insert(123);
+  EmptyClass test;
 
-  g_messageBus.Publish(testEventData);
-  g_messageBus.Publish(bacon);
+  g_messageBus.Publish(signalData1);
+  g_messageBus.Publish(signalData2);
+  g_messageBus.Publish(test);
   return 0;
 }

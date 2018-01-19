@@ -5,23 +5,14 @@
 #include <map>
 //////////////////////////////////////////////////////////////////
 
-template<typename eventdata_t>
-class EventSubscriber;
-
-//Necessary for type safety when downcasting 
-class EventData
-{
-public:
-  virtual ~EventData() {}
-};
-
-//Necessary for type safety when downcasting 
+//This is used so that we have a common form of storing subscribers
 class EventSubscriberGeneric
 {
 public:
   virtual ~EventSubscriberGeneric() {}
 };
 
+//Necessary for type safety when downcasting 
 template<typename eventdata_t>
 class EventSubscriber
   : public EventSubscriberGeneric
