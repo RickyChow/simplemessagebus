@@ -6,7 +6,7 @@
 EventMessageBus g_messageBus;
 
 class TestEventData
-  : public EventData<TestEventData>
+  : public EventData
 {
 public:
   int test;
@@ -31,7 +31,7 @@ public:
 
 
 class BaconData
-  : public EventData<BaconData>
+  : public EventData
 {
 public:
   std::string baconName;
