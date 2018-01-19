@@ -20,9 +20,9 @@ class EventSubscriberGeneric
 {
 private:
   template<typename data_t>
-  void ReceivedEventInner(const EventData<data_t>& data)
+  void ReceivedEventInner(EventData<data_t>& data)
   {
-    data_t::Subscriber* subTyped = dynamic_cast<data_t::Subscriber*>(this);
+    EventData<data_t>::Subscriber* subTyped = dynamic_cast<EventData<data_t>::Subscriber*>(this);
     data_t* dataTyped = dynamic_cast<data_t*>(&data);
     if (!dataTyped || !subTyped) return;
     subTyped->ReceivedEvent(*dataTyped);
@@ -52,10 +52,10 @@ private:
 public:
 
   template<typename data_t>
-  void Publish(const data_t& data)
+  void Publish(EventData<data_t>& data)
   {
     EventSubscriberGeneric* sub = m_subscribers[GetEventId<data_t>()];
-    sub->ReceivedEventInner<data_t>(data);
+    sub->ReceivedEventInner(data);
   }
 
   template<typename sub_t>
