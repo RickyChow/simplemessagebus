@@ -28,7 +28,7 @@ public:
     g_messageBus.Subscribe(this);
   }
 
-  void ReceivedEvent(SignalData& signalData)
+  void ReceivedEvent(const SignalData& signalData)
   {
     if (signalData.id == m_id) {
       printf("SignalDataConsumer Received event data: %s!\r\n", signalData.data.c_str());
@@ -49,12 +49,12 @@ public:
     g_messageBus.Subscribe<SignalData>(this);
     g_messageBus.Subscribe<SignData>(this);
   }
-  void ReceivedEvent(SignalData& signalData)
+  void ReceivedEvent(const SignalData& signalData)
   {
     printf("AllConsumer received signalData %s!\r\n", signalData.data.c_str());
   }
 
-  void ReceivedEvent(SignData& signData)
+  void ReceivedEvent(const SignData& signData)
   {
     printf("AllConsumer received signData magic number: %d!\r\n", signData.magicNumber);
   }

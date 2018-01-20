@@ -19,7 +19,7 @@ class EventSubscriber
   : public EventSubscriberGeneric
 {
 public:
-  virtual void ReceivedEvent(eventdata_t& event) = 0;
+  virtual void ReceivedEvent(const eventdata_t& event) = 0;
 };
 
 
@@ -36,17 +36,16 @@ private:
 
 public:
   template<typename data_t>
-  void Publish(data_t& data)
+  void Publish(const data_t& data)
   {
     subscribercol_t subs = m_subscribers[GetEventId<data_t>()];
-
     subscribercol_t::iterator sub = subs.begin();
 
     for (; sub != subs.end(); ++sub) {
 
       EventSubscriber<data_t>* subTyped = 
-        dynamic_cast<EventSubscriber<data_t>* >(*sub);
-      data_t* dataTyped = dynamic_cast<data_t*>(&data);
+        static_cast<EventSubscriber<data_t>* >(*sub);
+      const data_t* dataTyped = static_cast<const data_t*>(&data);
 
       if (dataTyped && subTyped) {
         subTyped->ReceivedEvent(*dataTyped);
