@@ -1,31 +1,15 @@
 #include <stdio.h>
 
-#include "messagebus.h"
-
-EventMessageBus g_messageBus;
-
-struct SignalData
-{
-  int id;
-  std::string data;
-};
-
-struct SignData
-{
-  int id;
-  int magicNumber;
-};
-
-
+#include "globalmessagebus.h"
+#include "eventmessagedef.h"
 
 class SignalDataConsumer
-  : public EventSubscriber<SignalData>
+  : public GlobalEventSubscriber<SignalData>
 {
 public:
   SignalDataConsumer(int id)
     : m_id(id)
   {
-    g_messageBus.Subscribe(this);
   }
 
   void ReceivedEvent(const SignalData& signalData)
@@ -40,15 +24,11 @@ private:
 };
 
 class AllConsumer
-  : public EventSubscriber<SignalData>
-  , public EventSubscriber<SignData>
+  : public GlobalEventSubscriber<SignalData>
+  , public GlobalEventSubscriber<SignData>
+  , public GlobalEventSubscriber<int>
 {
 public:
-  AllConsumer()
-  {
-    g_messageBus.Subscribe<SignalData>(this);
-    g_messageBus.Subscribe<SignData>(this);
-  }
   void ReceivedEvent(const SignalData& signalData)
   {
     printf("AllConsumer received signalData %s!\r\n", signalData.data.c_str());
@@ -57,6 +37,11 @@ public:
   void ReceivedEvent(const SignData& signData)
   {
     printf("AllConsumer received signData magic number: %d!\r\n", signData.magicNumber);
+  }
+
+  void ReceivedEvent(const int& intData)
+  {
+    printf("AllConsumer received int data %d!\r\n", intData);
   }
 };
 
@@ -80,5 +65,6 @@ int main()
   g_messageBus.Publish(signalData1);
   g_messageBus.Publish(signalData2);
   g_messageBus.Publish(signData1);
+  g_messageBus.Publish(123);
   return 0;
 }

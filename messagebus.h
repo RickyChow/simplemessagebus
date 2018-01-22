@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include <set>
-//////////////////////////////////////////////////////////////////
+#include <typeinfo>
 
 //This is used so that we have a common form of storing subscribers
 class EventSubscriberGeneric
